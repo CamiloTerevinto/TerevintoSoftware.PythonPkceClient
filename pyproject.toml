@@ -1,0 +1,25 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "TerevintoSoftware.PkceClient"
+version = "0.0.1"
+authors = [
+  { name="Camilo Terevinto", email="software@camiloterevinto.com" },
+]
+description = "A Python package to deal with OAuth PKCE authentication flow to generate JWT tokens from desktop apps."
+readme = "README.md"
+license = { file="LICENSE" }
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+keywords = [ "oauth", "oidc", "pkce" ]
+dependencies = [ "requests" ]
+
+[project.urls]
+"Homepage" = "https://github.com/CamiloTerevinto/TerevintoSoftware.PythonPkceClient"
+"Bug Tracker" = "https://github.com/CamiloTerevinto/TerevintoSoftware.PythonPkceClient/issues"
