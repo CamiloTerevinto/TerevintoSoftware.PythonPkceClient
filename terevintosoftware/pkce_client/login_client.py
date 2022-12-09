@@ -21,6 +21,10 @@ class PkceClient():
             code_verifier, code_challenge = generate_pkce_code_pair()
 
             redirect_uri = f"http://localhost:{self.__login_config.internal_port}"
+
+            if len(self.__login_config.redirect_uri_extension) > 0:
+                redirect_uri = f"{redirect_uri}/{self.__login_config.redirect_uri_extension}"
+
             login_uri = self.__generate_login_uri(self.__login_config, code_challenge, redirect_uri)
 
             open_new(login_uri)
