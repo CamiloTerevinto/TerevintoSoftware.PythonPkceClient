@@ -1,10 +1,11 @@
-from typing import List
+from typing import List, Union
+from .token_config_map import TokenConfigMap
 
 
 class PkceLoginConfig():
     def __init__(self, authorization_uri: str, token_uri: str, scopes: List[str], client_id: str, internal_port: int, 
         add_random_state: bool, random_state_length: int = 0, verify_authorization_server_https: bool = True,
-        redirect_uri_extension: str = "") -> None:
+        redirect_uri_extension: str = "", token_config_map: Union[TokenConfigMap, None] = None) -> None:
         """Initializes the configuration for PKCE sign in.
 
         Args:
@@ -17,6 +18,7 @@ class PkceLoginConfig():
             random_state_length (int, optional): The length of the random state created when enabled. Defaults to 0.
             verify_authorization_server_https (bool, optional): Whether to verify the HTTPs connection to the server. Defaults to True.
             redirect_uri_extension (str, optional): An optional suffix to add to the redirect URI, such as /callback. Defaults to "".
+            token_config_map (TokenConfigMap, optional): An optional map to edit how the token is mapped into a PkceToken. Defaults to None.
 
         Raises:
             ValueError: The authorization_uri is None or empty.
@@ -41,13 +43,16 @@ class PkceLoginConfig():
         if not internal_port or internal_port < 1 or internal_port > 65535:
             raise ValueError("A valid port is required, normally between 1024 and 65535, such as 8080")
         
-        if redirect_uri_extension and redirect_uri_extension.startswith("http"):
-            raise ValueError("The redirect_uri must be a relative uri (such as /callback for http://localhost/callback)")
-
-        if not redirect_uri_extension:
+        if redirect_uri_extension:
+            if redirect_uri_extension.startswith("http:"):
+                raise ValueError("The redirect_uri must be a relative uri (such as /callback for http://localhost/callback)")
+            elif redirect_uri_extension.startswith("/"):
+                redirect_uri_extension = redirect_uri_extension.removeprefix("/")
+        else:
             redirect_uri_extension = ""
-        elif redirect_uri_extension.startswith("/"):
-            redirect_uri_extension = redirect_uri_extension.removeprefix("/")
+
+        if token_config_map is None:
+            token_config_map = TokenConfigMap()
         
         self.authorization_uri = authorization_uri
         self.token_uri = token_uri
@@ -58,3 +63,4 @@ class PkceLoginConfig():
         self.add_random_state = add_random_state
         self.random_state_length = random_state_length
         self.redirect_uri_extension = redirect_uri_extension
+        self.token_config_map = token_config_map

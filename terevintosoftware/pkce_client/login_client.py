@@ -1,3 +1,4 @@
+from typing import Any, Dict
 from urllib.parse import urlencode
 from webbrowser import open_new
 from requests import post
@@ -44,9 +45,9 @@ class PkceClient():
 
             response = post(self.__login_config.token_uri, data=data, verify=self.__login_config.verify_authorization_server_https)
 
-            jwt_token: dict = response.json()
+            jwt_token: Dict[str, Any] = response.json()
 
-            self.__token = PkceToken(**jwt_token)
+            self.__token = PkceToken(jwt_token, self.__login_config.token_config_map)
 
             return self.__token
     
@@ -78,9 +79,9 @@ class PkceClient():
 
         response = post(self.__login_config.token_uri, data=data, verify=self.__login_config.verify_authorization_server_https)
 
-        jwt_token: dict = response.json()
+        jwt_token: Dict[str, Any] = response.json()
 
-        self.__token = PkceToken(**jwt_token)
+        self.__token = PkceToken(jwt_token, self.__login_config.token_config_map)
 
         return self.__token
 
